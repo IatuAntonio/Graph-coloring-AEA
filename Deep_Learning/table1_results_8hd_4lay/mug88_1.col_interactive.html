@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff0000", "id": "0", "label": "0", "shape": "dot", "title": "Node 0, Color 1", "x": -195.35372219720955, "y": 106.60254727013105}, {"color": "#ff0000", "id": "1", "label": "1", "shape": "dot", "title": "Node 1, Color 1", "x": -13.123520552844113, "y": 123.51226091211895}, {"color": "#ff0000", "id": "5", "label": "5", "shape": "dot", "title": "Node 5, Color 1", "x": -191.8554328736849, "y": 226.3319366395894}, {"color": "#ff0000", "id": "6", "label": "6", "shape": "dot", "title": "Node 6, Color 1", "x": -367.45307845305473, "y": 189.44405581461214}, {"color": "#ff0000", "id": "64", "label": "64", "shape": "dot", "title": "Node 64, Color 1", "x": -320.31586053400736, "y": -0.16260173187553312}, {"color": "#ff0000", "id": "3", "label": "3", "shape": "dot", "title": "Node 3, Color 1", "x": 44.413779070006264, "y": -73.26791827321763}, {"color": "#ff0000", "id": "37", "label": "37", "shape": "dot", "title": "Node 37, Color 1", "x": -68.67686698391067, "y": 323.81146239739337}, {"color": "#ff0000", "id": "52", "label": "52", "shape": "dot", "title": "Node 52, Color 1", "x": 146.1767992494867, "y": 246.44117718229168}, {"color": "#ff0000", "id": "2", "label": "2", "shape": "dot", "title": "Node 2, Color 1", "x": 209.62002113168944, "y": 237.31066207288524}, {"color": "#ff0000", "id": "4", "label": "4", "shape": "dot", "title": "Node 4, Color 1", "x": 7.378988190372089, "y": 263.78153195550647}, {"color": "#ff0000", "id": "7", "label": "7", "shape": "dot", "title": "Node 7, Color 1", "x": 207.88846445031209, "y": 446.03290784730507}, {"color": "#ff0000", "id": "20", "label": "20", "shape": "dot", "title": "Node 20, Color 1", "x": 238.98874094892972, "y": 81.66020645136545}, {"color": "#ff0000", "id": "21", "label": "21", "shape": "dot", "title": "Node 21, Color 1", "x": 403.1789155896095, "y": 169.7476627066856}, {"color": "#ff0000", "id": "11", "label": "11", "shape": "dot", "title": "Node 11, Color 1", "x": 72.50318193587576, "y": -243.42636535505346}, {"color": "#ff0000", "id": "12", "label": "12", "shape": "dot", "title": "Node 12, Color 1", "x": -56.92454501771015, "y": -220.11111913212923}, {"color": "#ff0000", "id": "19", "label": "19", "shape": "dot", "title": "Node 19, Color 1", "x": 214.99473968027118, "y": -70.3494532146778}, {"color": "#ff0000", "id": "59", "label": "59", "shape": "dot", "title": "Node 59, Color 1", "x": -117.43017270252662, "y": 328.86855085230025}, {"color": "#ff0000", "id": "60", "label": "60", "shape": "dot", "title": "Node 60, Color 1", "x": -105.48197811233655, "y": 411.59941995119016}, {"color": "#ff0000", "id": "23", "label": "23", "shape": "dot", "title": "Node 23, Color 1", "x": -343.03266149332745, "y": 383.69045360428026}, {"color": "#ff0000", "id": "24", "label": "24", "shape": "dot", "title": "Node 24, Color 1", "x": -373.70659413859653, "y": 302.67211010737327}, {"color": "#ff0000", "id": "58", "label": "58", "shape": "dot", "title": "Node 58, Color 1", "x": -274.69119859851844, "y": 325.6701275544887}, {"color": "#ff0000", "id": "77", "label": "77", "shape": "dot", "title": "Node 77, Color 1", "x": -556.5509446372859, "y": 208.83795396646968}, {"color": "#ff0000", "id": "78", "label": "78", "shape": "dot", "title": "Node 78, Color 1", "x": -530.0338706927074, "y": 284.0869741896552}, {"color": "#ff0000", "id": "8", "label": "8", "shape": "dot", "title": "Node 8, Color 1", "x": 278.9481594104497, "y": 516.3880313461586}, {"color": "#ff0000", "id": "9", "label": "9", "shape": "dot", "title": "Node 9, Color 1", "x": 235.1568398058102, "y": 637.2467323982821}, {"color": "#ff0000", "id": "53", "label": "53", "shape": "dot", "title": "Node 53, Color 1", "x": 242.5420137067706, "y": 387.810106366704}, {"color": "#ff0000", "id": "54", "label": "54", "shape": "dot", "title": "Node 54, Color 1", "x": 333.81814420939304, "y": 368.965601417093}, {"color": "#ff0000", "id": "14", "label": "14", "shape": "dot", "title": "Node 14, Color 1", "x": 109.78747065056068, "y": 720.5034076633478}, {"color": "#ff0000", "id": "16", "label": "16", "shape": "dot", "title": "Node 16, Color 1", "x": 293.9745891422104, "y": 807.151016778536}, {"color": "#ff0000", "id": "10", "label": "10", "shape": "dot", "title": "Node 10, Color 1", "x": -166.59775189829557, "y": -377.97222190325016}, {"color": "#ff0000", "id": "29", "label": "29", "shape": "dot", "title": "Node 29, Color 1", "x": -318.45828980886705, "y": -348.3636849705055}, {"color": "#ff0000", "id": "31", "label": "31", "shape": "dot", "title": "Node 31, Color 1", "x": -273.3062145912959, "y": -527.7082710952249}, {"color": "#ff0000", "id": "43", "label": "43", "shape": "dot", "title": "Node 43, Color 1", "x": -55.85332753622182, "y": -500.48876175431866}, {"color": "#ff0000", "id": "44", "label": "44", "shape": "dot", "title": "Node 44, Color 1", "x": 44.09337898127026, "y": -391.75308085907994}, {"color": "#ff0000", "id": "46", "label": "46", "shape": "dot", "title": "Node 46, Color 1", "x": 203.7440307658907, "y": -378.57961152791717}, {"color": "#ff0000", "id": "13", "label": "13", "shape": "dot", "title": "Node 13, Color 1", "x": -39.667393210265224, "y": 701.5389457189806}, {"color": "#ff0000", "id": "15", "label": "15", "shape": "dot", "title": "Node 15, Color 1", "x": 54.77618140368489, "y": 838.4362645594081}, {"color": "#ff0000", "id": "39", "label": "39", "shape": "dot", "title": "Node 39, Color 1", "x": -69.96875404436027, "y": 518.6711132292656}, {"color": "#ff0000", "id": "67", "label": "67", "shape": "dot", "title": "Node 67, Color 1", "x": -191.06028030147849, "y": 799.68827792029}, {"color": "#ff0000", "id": "17", "label": "17", "shape": "dot", "title": "Node 17, Color 1", "x": 222.9852941005353, "y": 914.1028730563058}, {"color": "#ff0000", "id": "18", "label": "18", "shape": "dot", "title": "Node 18, Color 1", "x": 146.61936043276518, "y": 931.1061726757868}, {"color": "#ff0000", "id": "41", "label": "41", "shape": "dot", "title": "Node 41, Color 1", "x": 372.9893877651219, "y": -92.6541554092985}, {"color": "#ff0000", "id": "42", "label": "42", "shape": "dot", "title": "Node 42, Color 1", "x": 377.7449611150682, "y": -177.47018130649343}, {"color": "#ff0000", "id": "25", "label": "25", "shape": "dot", "title": "Node 25, Color 1", "x": 413.61276936737596, "y": 88.02066906508344}, {"color": "#ff0000", "id": "26", "label": "26", "shape": "dot", "title": "Node 26, Color 1", "x": 523.3294939296647, "y": 224.18047492333676}, {"color": "#ff0000", "id": "27", "label": "27", "shape": "dot", "title": "Node 27, Color 1", "x": 547.5336351935475, "y": 148.37606060202566}, {"color": "#ff0000", "id": "40", "label": "40", "shape": "dot", "title": "Node 40, Color 1", "x": 512.4775643919589, "y": -8.233577580846655}, {"color": "#ff0000", "id": "22", "label": "22", "shape": "dot", "title": "Node 22, Color 1", "x": -510.5467993579641, "y": 441.0585112555994}, {"color": "#ff0000", "id": "76", "label": "76", "shape": "dot", "title": "Node 76, Color 1", "x": -642.5316472299729, "y": 361.6666908096001}, {"color": "#ff0000", "id": "28", "label": "28", "shape": "dot", "title": "Node 28, Color 1", "x": -450.2638333423411, "y": -260.09211322110605}, {"color": "#ff0000", "id": "30", "label": "30", "shape": "dot", "title": "Node 30, Color 1", "x": -470.5647973375071, "y": -402.595170925444}, {"color": "#ff0000", "id": "65", "label": "65", "shape": "dot", "title": "Node 65, Color 1", "x": -476.5217511067135, "y": -96.02720699404168}, {"color": "#ff0000", "id": "66", "label": "66", "shape": "dot", "title": "Node 66, Color 1", "x": -399.2278624990559, "y": -125.70792444694118}, {"color": "#ff0000", "id": "32", "label": "32", "shape": "dot", "title": "Node 32, Color 1", "x": -436.28370296375317, "y": -556.4833570501551}, {"color": "#ff0000", "id": "55", "label": "55", "shape": "dot", "title": "Node 55, Color 1", "x": -626.3320106500119, "y": -443.30197911068484}, {"color": "#ff0000", "id": "33", "label": "33", "shape": "dot", "title": "Node 33, Color 1", "x": -374.3605062462105, "y": -655.2881489992194}, {"color": "#ff0000", "id": "36", "label": "36", "shape": "dot", "title": "Node 36, Color 1", "x": -448.3237172081531, "y": -741.0224447952902}, {"color": "#ff0000", "id": "61", "label": "61", "shape": "dot", "title": "Node 61, Color 1", "x": -633.7423032388997, "y": -621.7774619381548}, {"color": "#ff0000", "id": "34", "label": "34", "shape": "dot", "title": "Node 34, Color 1", "x": -420.25417816450835, "y": -837.7240688730501}, {"color": "#ff0000", "id": "56", "label": "56", "shape": "dot", "title": "Node 56, Color 1", "x": -589.5671237167205, "y": -563.0814896327234}, {"color": "#ff0000", "id": "57", "label": "57", "shape": "dot", "title": "Node 57, Color 1", "x": -527.0710113574673, "y": -608.4978849057103}, {"color": "#ff0000", "id": "35", "label": "35", "shape": "dot", "title": "Node 35, Color 1", "x": -586.2692399694138, "y": -837.9124068359697}, {"color": "#ff0000", "id": "86", "label": "86", "shape": "dot", "title": "Node 86, Color 1", "x": -459.70381104199583, "y": -991.1497894154064}, {"color": "#ff0000", "id": "87", "label": "87", "shape": "dot", "title": "Node 87, Color 1", "x": -345.4228927123931, "y": -1000.0}, {"color": "#ff0000", "id": "62", "label": "62", "shape": "dot", "title": "Node 62, Color 1", "x": -735.8702008722205, "y": -725.8014454575019}, {"color": "#ff0000", "id": "63", "label": "63", "shape": "dot", "title": "Node 63, Color 1", "x": -696.0061758462717, "y": -796.1629724922392}, {"color": "#ff0000", "id": "85", "label": "85", "shape": "dot", "title": "Node 85, Color 1", "x": -363.5972936904863, "y": -907.4523738349823}, {"color": "#ff0000", "id": "38", "label": "38", "shape": "dot", "title": "Node 38, Color 1", "x": -192.0963467408352, "y": 501.10117241476115}, {"color": "#ff0000", "id": "68", "label": "68", "shape": "dot", "title": "Node 68, Color 1", "x": -232.01778755833817, "y": 669.8392878925964}, {"color": "#ff0000", "id": "69", "label": "69", "shape": "dot", "title": "Node 69, Color 1", "x": -306.2580501043386, "y": 652.9650782516214}, {"color": "#ff0000", "id": "50", "label": "50", "shape": "dot", "title": "Node 50, Color 1", "x": 666.9381430231098, "y": -119.26631317802003}, {"color": "#ff0000", "id": "51", "label": "51", "shape": "dot", "title": "Node 51, Color 1", "x": 663.1382044863856, "y": -37.86319089604265}, {"color": "#ff0000", "id": "49", "label": "49", "shape": "dot", "title": "Node 49, Color 1", "x": 564.0953846705194, "y": -200.8981349217898}, {"color": "#ff0000", "id": "45", "label": "45", "shape": "dot", "title": "Node 45, Color 1", "x": 75.92261602569404, "y": -559.5083055621656}, {"color": "#ff0000", "id": "48", "label": "48", "shape": "dot", "title": "Node 48, Color 1", "x": 198.97699862013332, "y": -519.6382722289724}, {"color": "#ff0000", "id": "73", "label": "73", "shape": "dot", "title": "Node 73, Color 1", "x": 175.64001144065912, "y": -708.5547315452056}, {"color": "#ff0000", "id": "47", "label": "47", "shape": "dot", "title": "Node 47, Color 1", "x": 316.52442795541197, "y": -534.3088603930448}, {"color": "#ff0000", "id": "74", "label": "74", "shape": "dot", "title": "Node 74, Color 1", "x": 294.9458096471479, "y": -720.4212183862837}, {"color": "#ff0000", "id": "75", "label": "75", "shape": "dot", "title": "Node 75, Color 1", "x": 359.6501718651631, "y": -671.4806913805025}, {"color": "#ff0000", "id": "80", "label": "80", "shape": "dot", "title": "Node 80, Color 1", "x": 809.4253133442636, "y": -196.48057639751457}, {"color": "#ff0000", "id": "81", "label": "81", "shape": "dot", "title": "Node 81, Color 1", "x": 849.8326869132584, "y": -120.49939977923671}, {"color": "#ff0000", "id": "79", "label": "79", "shape": "dot", "title": "Node 79, Color 1", "x": 841.8852150732291, "y": -28.550348257492196}, {"color": "#ff0000", "id": "70", "label": "70", "shape": "dot", "title": "Node 70, Color 1", "x": 400.2996190875763, "y": 543.9973705533905}, {"color": "#ff0000", "id": "72", "label": "72", "shape": "dot", "title": "Node 72, Color 1", "x": 460.2668807003063, "y": 469.4284636038975}, {"color": "#ff0000", "id": "82", "label": "82", "shape": "dot", "title": "Node 82, Color 1", "x": 532.527613475817, "y": 420.8221929185474}, {"color": "#ff0000", "id": "71", "label": "71", "shape": "dot", "title": "Node 71, Color 1", "x": 555.3384899784413, "y": 608.9010158380261}, {"color": "#ff0000", "id": "83", "label": "83", "shape": "dot", "title": "Node 83, Color 1", "x": 674.927045219007, "y": 488.87218382014083}, {"color": "#ff0000", "id": "84", "label": "84", "shape": "dot", "title": "Node 84, Color 1", "x": 652.763965189323, "y": 577.1495694143565}]);
+                  edges = new vis.DataSet([{"from": "0", "to": "1"}, {"from": "0", "to": "5"}, {"from": "0", "to": "6"}, {"from": "0", "to": "64"}, {"from": "1", "to": "3"}, {"from": "1", "to": "37"}, {"from": "1", "to": "52"}, {"from": "5", "to": "4"}, {"from": "5", "to": "23"}, {"from": "5", "to": "24"}, {"from": "6", "to": "58"}, {"from": "6", "to": "77"}, {"from": "6", "to": "78"}, {"from": "64", "to": "65"}, {"from": "64", "to": "66"}, {"from": "3", "to": "11"}, {"from": "3", "to": "12"}, {"from": "3", "to": "19"}, {"from": "37", "to": "38"}, {"from": "37", "to": "39"}, {"from": "52", "to": "53"}, {"from": "52", "to": "54"}, {"from": "2", "to": "4"}, {"from": "2", "to": "7"}, {"from": "2", "to": "20"}, {"from": "2", "to": "21"}, {"from": "4", "to": "59"}, {"from": "4", "to": "60"}, {"from": "7", "to": "8"}, {"from": "7", "to": "9"}, {"from": "20", "to": "19"}, {"from": "20", "to": "25"}, {"from": "21", "to": "26"}, {"from": "21", "to": "27"}, {"from": "21", "to": "40"}, {"from": "11", "to": "12"}, {"from": "11", "to": "44"}, {"from": "11", "to": "46"}, {"from": "12", "to": "10"}, {"from": "19", "to": "41"}, {"from": "19", "to": "42"}, {"from": "59", "to": "58"}, {"from": "59", "to": "60"}, {"from": "60", "to": "58"}, {"from": "23", "to": "22"}, {"from": "23", "to": "24"}, {"from": "24", "to": "22"}, {"from": "77", "to": "76"}, {"from": "77", "to": "78"}, {"from": "78", "to": "76"}, {"from": "8", "to": "9"}, {"from": "8", "to": "53"}, {"from": "8", "to": "54"}, {"from": "9", "to": "14"}, {"from": "9", "to": "16"}, {"from": "53", "to": "70"}, {"from": "54", "to": "72"}, {"from": "54", "to": "82"}, {"from": "14", "to": "13"}, {"from": "14", "to": "15"}, {"from": "16", "to": "17"}, {"from": "16", "to": "18"}, {"from": "10", "to": "29"}, {"from": "10", "to": "31"}, {"from": "10", "to": "43"}, {"from": "29", "to": "28"}, {"from": "29", "to": "30"}, {"from": "31", "to": "32"}, {"from": "31", "to": "33"}, {"from": "43", "to": "44"}, {"from": "43", "to": "45"}, {"from": "44", "to": "45"}, {"from": "46", "to": "47"}, {"from": "46", "to": "48"}, {"from": "13", "to": "15"}, {"from": "13", "to": "39"}, {"from": "13", "to": "67"}, {"from": "15", "to": "17"}, {"from": "15", "to": "18"}, {"from": "39", "to": "38"}, {"from": "67", "to": "68"}, {"from": "67", "to": "69"}, {"from": "17", "to": "18"}, {"from": "41", "to": "40"}, {"from": "41", "to": "42"}, {"from": "42", "to": "49"}, {"from": "25", "to": "26"}, {"from": "25", "to": "27"}, {"from": "26", "to": "27"}, {"from": "40", "to": "50"}, {"from": "40", "to": "51"}, {"from": "22", "to": "76"}, {"from": "28", "to": "30"}, {"from": "28", "to": "65"}, {"from": "28", "to": "66"}, {"from": "30", "to": "32"}, {"from": "30", "to": "55"}, {"from": "65", "to": "66"}, {"from": "32", "to": "36"}, {"from": "32", "to": "61"}, {"from": "55", "to": "56"}, {"from": "55", "to": "57"}, {"from": "33", "to": "34"}, {"from": "33", "to": "56"}, {"from": "33", "to": "57"}, {"from": "36", "to": "35"}, {"from": "36", "to": "85"}, {"from": "61", "to": "62"}, {"from": "61", "to": "63"}, {"from": "34", "to": "35"}, {"from": "34", "to": "86"}, {"from": "34", "to": "87"}, {"from": "56", "to": "57"}, {"from": "35", "to": "62"}, {"from": "35", "to": "63"}, {"from": "86", "to": "85"}, {"from": "86", "to": "87"}, {"from": "87", "to": "85"}, {"from": "62", "to": "63"}, {"from": "38", "to": "68"}, {"from": "38", "to": "69"}, {"from": "68", "to": "69"}, {"from": "50", "to": "49"}, {"from": "50", "to": "80"}, {"from": "50", "to": "81"}, {"from": "51", "to": "49"}, {"from": "51", "to": "79"}, {"from": "45", "to": "48"}, {"from": "45", "to": "73"}, {"from": "48", "to": "47"}, {"from": "73", "to": "74"}, {"from": "73", "to": "75"}, {"from": "47", "to": "74"}, {"from": "47", "to": "75"}, {"from": "74", "to": "75"}, {"from": "80", "to": "79"}, {"from": "80", "to": "81"}, {"from": "81", "to": "79"}, {"from": "70", "to": "71"}, {"from": "70", "to": "72"}, {"from": "72", "to": "71"}, {"from": "82", "to": "83"}, {"from": "82", "to": "84"}, {"from": "71", "to": "83"}, {"from": "71", "to": "84"}, {"from": "83", "to": "84"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": false}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

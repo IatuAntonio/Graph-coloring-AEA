@@ -1,10 +1,11 @@
 import torch
 import torch.nn.functional as F
-from torch_geometric.nn import GCNConv, GATConv
+from torch_geometric.nn import GATConv
 from torch_geometric.data import Data
 import networkx as nx
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
+import matplotlib.patches as mpatches
+from pyvis.network import Network
 import os
 import time
 import psutil
@@ -13,17 +14,20 @@ import psutil
 class GAT(torch.nn.Module):
     def __init__(self, num_node_features, hidden_dim, num_classes):
         super(GAT, self).__init__()
-        self.conv1 = GATConv(num_node_features, hidden_dim, heads=4, dropout=0.1)
-        self.conv2 = GATConv(hidden_dim * 4, hidden_dim, heads=4, dropout=0.1)
-        self.conv3 = GATConv(hidden_dim * 4, num_classes, heads=1, dropout=0.1)
-        self.dropout = torch.nn.Dropout(p=0.1)
+        self.conv1 = GATConv(num_node_features, hidden_dim, heads=8, dropout=0.6)
+        self.conv2 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=0.6)
+        self.conv3 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=0.6)
+        self.conv4 = GATConv(hidden_dim * 8, num_classes, heads=1, dropout=0.6)
+        self.dropout = torch.nn.Dropout(p=0.6)
 
     def forward(self, x, edge_index):
         x = F.relu(self.conv1(x, edge_index))
         x = self.dropout(x)
         x = F.relu(self.conv2(x, edge_index))
         x = self.dropout(x)
-        x = self.conv3(x, edge_index)
+        x = F.relu(self.conv3(x, edge_index))
+        x = self.dropout(x)
+        x = self.conv4(x, edge_index)
         return x
 
 # Helper functions
@@ -48,6 +52,71 @@ def track_ram_usage():
     process = psutil.Process(os.getpid())
     return process.memory_info().rss / 1024 / 1024  # MB
 
+# Graph visualization
+def plot_colored_graph(graph, colors, instance_name, output_dir):
+    num_nodes = len(graph.nodes)
+    if len(colors) != num_nodes:
+        print(f"Warning: Color array size {len(colors)} does not match the number of nodes {num_nodes}. Adjusting colors array.")
+        colors = colors[:num_nodes]
+
+    plt.figure(figsize=(7, 6))
+    pos = nx.kamada_kawai_layout(graph)
+    nx.draw(graph, pos,
+            with_labels=False,
+            node_color=colors,
+            cmap=plt.cm.rainbow,
+            node_size=100,
+            edge_color='lightgray')
+
+    unique_colors = sorted(set(colors))
+    max_color = max(unique_colors) if unique_colors else 1
+
+    if max_color == 0:
+        patches = [mpatches.Patch(color=plt.cm.rainbow(0.0), label='Color 0')]
+    else:
+        patches = [mpatches.Patch(color=plt.cm.rainbow(i / max_color), label=f'Color {i}') for i in unique_colors]
+
+    plt.legend(handles=patches, title="Clase GNN", bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.title(f"Colored Graph - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'{instance_name}_colored_graph.png'))
+    plt.savefig(os.path.join(output_dir, f'{instance_name}_colored_graph.svg'), format='svg')
+    plt.close()
+def interactive_graph(G, colors, instance_name, output_dir):
+    net = Network(height='750px', width='100%', notebook=False)
+    pos = nx.kamada_kawai_layout(G)
+    cmap = plt.cm.rainbow
+
+    # Ensure max_color is not zero
+    max_color = max(colors) if max(colors) != 0 else 1
+
+    # Add nodes first
+    for i, node in enumerate(G.nodes()):
+        node_id = str(node)  # Convert node ID to a string
+        rgb = cmap(colors[i] / max_color)[:3]  # Safe division by max_color
+        hex_color = '#{:02x}{:02x}{:02x}'.format(
+            int(rgb[0]*255), int(rgb[1]*255), int(rgb[2]*255))
+        x, y = pos[node]
+        net.add_node(node_id, label=str(node),
+                     color=hex_color,
+                     title=f"Node {node}, Color {colors[i]}",
+                     x=float(x * 1000), y=float(y * 1000))
+
+    # Then add edges after nodes are added
+    for u, v in G.edges():
+        net.add_edge(str(u), str(v))  # Ensure node IDs are strings
+
+    net.set_options("""
+    var options = {
+      "physics": {
+        "enabled": false
+      }
+    }
+    """)
+    net.save_graph(os.path.join(output_dir, f"{instance_name}_interactive.html"))
+
+
+# Training setup
 instances = [
     ("instances/queen5_5.col", 25, 5), 
     ("instances/queen6_6.col", 36, 7),
@@ -71,15 +140,15 @@ instances = [
     ("instances/homer.col", 561, 13)
 ]
 
-# Params
-hidden_dim = 64
-learning_rate = 0.001
+hidden_dim = 32
+learning_rate = 0.005
 num_epochs = 5300
+output_dir = 'table1_results_32hd_4lay'
+os.makedirs(output_dir, exist_ok=True)
+
 table_1_results = []
 
-os.makedirs('table1_results', exist_ok=True)
-
-# Train on each instance
+# Training loop
 for instance in instances:
     file_path, num_nodes, num_classes = instance
 
@@ -96,11 +165,10 @@ for instance in instances:
 
     start_time = time.time()
     ram_usage = []
-    epoch_times = []  # Track per-epoch execution time
+    epoch_times = []
 
     for epoch in range(num_epochs):
-        epoch_start_time = time.time()  
-
+        epoch_start_time = time.time()
         model.train()
         optimizer.zero_grad()
         out = model(data.x, data.edge_index)
@@ -109,8 +177,7 @@ for instance in instances:
         optimizer.step()
         scheduler.step(loss)
         ram_usage.append(track_ram_usage())
-
-        epoch_times.append(time.time() - epoch_start_time)  
+        epoch_times.append(time.time() - epoch_start_time)
 
     model.eval()
     out = model(data.x, data.edge_index)
@@ -128,29 +195,38 @@ for instance in instances:
         'Execution Time (s)': total_time
     })
 
+    instance_name = os.path.basename(file_path)
+
     # RAM usage plot
     plt.figure(figsize=(6, 4))
     plt.plot(range(num_epochs), ram_usage, label="RAM Usage (MB)")
     plt.xlabel("Epoch")
     plt.ylabel("RAM Usage (MB)")
-    plt.title(f"RAM Usage for {os.path.basename(file_path)}")
-    plt.savefig(f'table1_results/{os.path.basename(file_path)}_ram_usage.png')
+    plt.title(f"RAM Usage for {instance_name}")
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_ram_usage.png"))
     plt.close()
 
-    # Progressive cumulative execution time plot
+    # Cumulative time plot
     cumulative_times = [sum(epoch_times[:i+1]) for i in range(len(epoch_times))]
     plt.figure(figsize=(6, 4))
     plt.plot(range(1, num_epochs + 1), cumulative_times, marker='o', linewidth=2, color='teal')
     plt.xlabel("Epoch")
     plt.ylabel("Cumulative Execution Time (s)")
-    plt.title(f"Cumulative Execution Time - {os.path.basename(file_path)}")
+    plt.title(f"Cumulative Execution Time - {instance_name}")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f'table1_results/{os.path.basename(file_path)}_cumulative_execution_time.png')
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_cumulative_execution_time.png"))
     plt.close()
 
-# Save text results
-with open('table1_results/table_1_results.txt', 'w', encoding='utf-8') as f:
+    # Visualization
+    G = nx.Graph()
+    edge_list = edge_index.t().cpu().numpy()
+    G.add_edges_from(edge_list)
+    plot_colored_graph(G, predicted_colors.tolist(), instance_name, output_dir)
+    interactive_graph(G, predicted_colors.tolist(), instance_name, output_dir)
+
+# Save results
+with open(os.path.join(output_dir, 'table_1_results.txt'), 'w', encoding='utf-8') as f:
     f.write("Table 1: Results for Color02/03/04 instances:\n")
     for result in table_1_results:
         f.write(f"Instance: {result['Instance']}\n")
@@ -159,43 +235,3 @@ with open('table1_results/table_1_results.txt', 'w', encoding='utf-8') as f:
         f.write(f"Predicted χ (GNN): {result['Predicted χ (GNN)']}\n")
         f.write(f"Predicted Colors: {result['Predicted Colors']}\n")
         f.write(f"Execution Time (s): {result['Execution Time (s)']}\n\n")
-
-# Visualization functions (same as original)
-def plot_colored_graph(graph, colors, instance_name):
-    num_nodes = len(graph.nodes)
-    if len(colors) != num_nodes:
-        print(f"Warning: Color array size {len(colors)} does not match the number of nodes {num_nodes}. Adjusting colors array.")
-        colors = colors[:num_nodes]
-    plt.figure(figsize=(5, 5))
-    pos = nx.spring_layout(graph)
-    nx.draw(graph, pos, with_labels=True, node_color=colors, cmap=plt.cm.rainbow, edge_color='gray', node_size=700)
-    plt.title(f"Colored Graph - {instance_name}")
-    plt.savefig(f'table1_results/{instance_name}_colored_graph.png')
-    plt.close()
-
-def visualize_embedding(h, colors, instance_name):
-    h = h.detach().cpu().numpy()
-    if h.ndim == 1:
-        h = h.reshape(-1, 1)
-    h = (h - h.mean()) / (h.std() + 1e-9)
-    if h.shape[1] > 1:
-        h = TSNE(n_components=2, perplexity=min(2, h.shape[0] - 1)).fit_transform(h)
-    else:
-        h = torch.cat((torch.linspace(-1, 1, h.shape[0]).unsqueeze(1), torch.zeros(h.shape[0], 1)), dim=1).numpy()
-    plt.figure(figsize=(7, 7))
-    scatter = plt.scatter(h[:, 0], h[:, 1], s=140, c=colors, cmap="Set2")
-    plt.title(f"Embedding - {instance_name}")
-    plt.legend(*scatter.legend_elements(), title="Node Colors")
-    plt.savefig(f'table1_results/{instance_name}_embedding.png')
-    plt.close()
-
-# Visualize all
-for instance, result in zip(instances, table_1_results):
-    instance_name = result['Instance']
-    predicted_colors = result['Predicted Colors']
-    G = nx.Graph()
-    _, edge_index = load_graph_from_file(f"instances/{instance_name}")
-    edge_list = edge_index.t().cpu().numpy()
-    G.add_edges_from(edge_list)
-    plot_colored_graph(G, predicted_colors, instance_name)
-    visualize_embedding(torch.tensor(predicted_colors), predicted_colors, instance_name)

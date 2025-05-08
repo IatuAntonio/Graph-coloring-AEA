@@ -13,9 +13,9 @@ import psutil
 class GAT(torch.nn.Module):
     def __init__(self, num_node_features, hidden_dim, num_classes):
         super(GAT, self).__init__()
-        self.conv1 = GATConv(num_node_features, hidden_dim, heads=4, dropout=0.1)
-        self.conv2 = GATConv(hidden_dim * 4, hidden_dim, heads=4, dropout=0.1)
-        self.conv3 = GATConv(hidden_dim * 4, num_classes, heads=1, dropout=0.1)
+        self.conv1 = GATConv(num_node_features, hidden_dim, heads=4, dropout=0.6)
+        self.conv2 = GATConv(hidden_dim * 4, hidden_dim, heads=4, dropout=0.6)
+        self.conv3 = GATConv(hidden_dim * 4, num_classes, heads=1, dropout=0.6)
         self.dropout = torch.nn.Dropout(p=0.1)
 
     def forward(self, x, edge_index):
@@ -40,7 +40,7 @@ synthetic_distributions = {
 
 # ===================== TRAINING SETTINGS =====================
 hidden_dim = 64
-learning_rate = 0.001
+learning_rate = 0.005
 num_epochs = 5300
 num_classes = 5  # assuming 5 colors (labels)
 
