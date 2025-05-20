@@ -1,5 +1,0 @@
-Table 2: GNN Results on Synthetic Distributions (compared to Lemos et al.)
-
-Power Law Tree: 98.00% accuracy, 75.81 seconds execution time
-Small-world: 94.00% accuracy, 57.83 seconds execution time
-Holme and Kim: 94.00% accuracy, 79.69 seconds execution time
