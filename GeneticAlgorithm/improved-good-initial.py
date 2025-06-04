@@ -1,0 +1,279 @@
+import random
+from collections import Counter
+import psutil
+import os
+import time
+import networkx as nx
+import matplotlib.pyplot as plt
+import torch
+from sklearn.manifold import TSNE
+from pyvis.network import Network
+import matplotlib.patches as mpatches
+
+
+def read_file(filename):
+    graph = {}
+    with open(filename, 'r') as file:
+        line = file.readline().strip().split()
+        nodes = int(line[2])
+        edges = int(line[3])
+
+        for i in range(nodes):
+            graph[i] = []
+
+        for _ in range(edges):
+            line = file.readline().strip().split()
+            u, v = int(line[1]) - 1, int(line[2]) - 1
+            graph[u].append(v)
+            graph[v].append(u)
+
+    return graph, nodes, edges
+
+
+def population_initialization(population_size, nodes):
+    return [[random.randint(0, nodes - 1) for _ in range(nodes)] for _ in range(population_size)]
+
+
+def fitness(solution, graph):
+    conflicts = sum(1 for node in graph for neighbor in graph[node] if node < neighbor and solution[node] == solution[neighbor])
+    if conflicts == 0:
+        return 10 * len(set(solution))
+    return 1000 * conflicts + 100 * len(set(solution))
+
+
+
+def selection(population, graph):
+    scores = [(solution, fitness(solution, graph)) for solution in population]
+    scores.sort(key=lambda x: x[1])
+    return scores[0][0], scores[1][0]
+
+
+def smart_crossover(parent1, parent2):
+    child = []
+
+    freq1 = Counter(parent1)
+    freq2 = Counter(parent2)
+
+    for i in range(len(parent1)):
+        color1 = parent1[i]
+        color2 = parent2[i]
+
+        if color1 == color2:
+            child.append(color1)
+        else:
+            if freq1[color1] + freq2[color1] > freq1[color2] + freq2[color2]:
+                chosen = color1
+            elif freq1[color1] + freq2[color1] < freq1[color2] + freq2[color2]:
+                chosen = color2
+            else:
+                chosen = min(color1, color2)
+
+            child.append(chosen)
+
+    return child
+
+
+def smart_mutation(solution):
+    index = random.randint(0, len(solution) - 1)
+    available_colors = sorted(set(solution))
+    solution[index] = random.choice(available_colors)
+    return solution
+
+
+def normalize(solution):
+    color_map = {}
+    color_index = 1
+    normalized_solution = []
+
+    for color in solution:
+        if color not in color_map:
+            color_map[color] = color_index
+            color_index += 1
+        normalized_solution.append(color_map[color])
+
+    return normalized_solution
+
+
+def color_reduction(solution):
+    new_solution = solution[:]
+    colors_used = sorted(set(new_solution))
+
+    for current_color in colors_used:
+        for new_color in range(current_color):
+            can_replace = True
+
+            for node in range(len(new_solution)):
+                if new_solution[node] == current_color:
+                    for neighbor in graph[node]:
+                        if new_solution[neighbor] == new_color:
+                            can_replace = False
+                            break
+                if not can_replace:
+                    break
+
+            if can_replace:
+                for node in range(len(new_solution)):
+                    if new_solution[node] == current_color:
+                        new_solution[node] = new_color
+                break
+
+    return new_solution
+
+
+def is_valid(solution, graph):
+    for node in graph:
+        for neighbor in graph[node]:
+            if node < neighbor:
+                if solution[node] == solution[neighbor]:
+                    return False
+    return True
+
+
+def save_ram_plot(ram_usage, instance_name, output_dir):
+    plt.figure(figsize=(6, 4))
+    plt.plot(range(len(ram_usage)), ram_usage)
+    plt.xlabel("Epoch")
+    plt.ylabel("RAM Usage (MB)")
+    plt.title(f"RAM Usage - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_ram.png"))
+    plt.close()
+
+
+def save_time_plot(gen_times, instance_name, output_dir):
+    cumulative = [sum(gen_times[:i+1]) for i in range(len(gen_times))]
+    plt.figure(figsize=(6, 4))
+    plt.plot(range(1, len(gen_times) + 1), cumulative, color='teal')
+    plt.xlabel("Epoch")
+    plt.ylabel("Cumulative Execution Time (s)")
+    plt.title(f"Cumulative Execution Time - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_time.png"))
+    plt.close()
+
+
+def save_static_graph_plot(graph, solution_colors, instance_name, output_dir):
+    G = nx.Graph(graph)
+    pos = nx.kamada_kawai_layout(G)
+    plt.figure(figsize=(7, 6))
+    nx.draw(G, pos, with_labels=False, node_color=solution_colors, cmap=plt.cm.rainbow,
+            node_size=100, edge_color='lightgray')
+    unique_colors = sorted(set(solution_colors))
+    patches = [mpatches.Patch(color=plt.cm.rainbow(i / max(unique_colors)), label=f'Color {i}') for i in unique_colors]
+    plt.legend(handles=patches, title="Colors", bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.title(f"Colored Graph - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_graph.png"))
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_graph.svg"), format='svg')
+    plt.close()
+
+
+def save_interactive_graph(graph, solution_colors, instance_name, output_dir):
+    G = nx.Graph(graph)
+    pos = nx.kamada_kawai_layout(G)
+    net = Network(height='700px', width='100%', notebook=False)
+    cmap = plt.cm.rainbow
+    max_color = max(solution_colors)
+    
+    for i, node in enumerate(G.nodes()):
+        rgb = cmap(solution_colors[i] / max_color)[:3]
+        hex_color = '#{:02x}{:02x}{:02x}'.format(int(rgb[0]*255), int(rgb[1]*255), int(rgb[2]*255))
+        x, y = pos[node]
+        net.add_node(str(node), label=str(node), color=hex_color, x=float(x*1000), y=float(y*1000),
+                     title=f"Node {node}, Color {solution_colors[i]}")
+    for u, v in G.edges():
+        net.add_edge(str(u), str(v))
+    net.set_options("""var options = {"physics": {"enabled": false}}""")
+    net.save_graph(os.path.join(output_dir, f"{instance_name}_interactive.html"))
+
+
+def genetic_algorithm(graph, nodes, instance_name, population_size=100, generations=1000, output_dir='./output'):
+    population = population_initialization(population_size, nodes)
+    # best_valid = None
+    valid_solutions = []
+    ram_usage = []
+    gen_times = []
+
+    for _ in range(generations):
+        start_gen = time.time()
+        ram_usage.append(track_ram_usage())
+
+        parent1, parent2 = selection(population, graph)
+        population[0] = parent1
+        population[1] = parent2
+
+        child = smart_crossover(parent1, parent2)
+        population[2] = child
+        child = smart_mutation(child)
+
+        worst = max(population, key=lambda sol: fitness(sol, graph))
+        population[population.index(worst)] = child
+        population[random.randint(0, population_size - 1)] = color_reduction(child)
+        # population[random.randint(0, population_size - 1)] = child
+
+        for individual in population:
+            if is_valid(individual, graph):
+                valid_solutions.append((individual, len(set(individual))))
+
+        gen_times.append(time.time() - start_gen)
+
+    if valid_solutions:
+        best = min(valid_solutions, key=lambda x: x[1])[0]
+    else:
+        best = min(population, key=lambda x: fitness(x, graph))
+
+    normalized = normalize(best)
+    
+    save_ram_plot(ram_usage, instance_name, output_dir)
+    save_time_plot(gen_times, instance_name, output_dir)
+    save_static_graph_plot(graph, normalized, instance_name, output_dir)
+    save_interactive_graph(graph, normalized, instance_name, output_dir)
+
+    return best
+
+
+def track_ram_usage():
+    return psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
+
+
+if __name__ == '__main__':
+    # filename = './instances/queen5_5.col'
+
+    instances = [
+        ('queen5_5', 5),
+        # ('queen6_6', 7),
+        # ('myciel5', 6),
+        # ('queen7_7', 7),
+        # ('queen8_8', 9),
+        # ('1-Insertions_4', 4),
+        # ('huck', 11),
+        # ('jean', 10),
+        # ('queen9_9', 10),
+        # ('david', 11),
+        # ('mug88_1', 4),
+        # ('myciel6', 7),
+        # ('queen8_12', 12),
+        # ('games120', 9),
+        # ('queen11_11', 11),
+        # ('anna', 11),
+        # ('2-Insertions_4', 4),
+        # ('queen13_13', 13),
+        # ('myciel7', 8),
+        # ('homer', 13),
+    ]
+     
+    for instance, result in instances:
+        filename = f'./instances/{instance}.col'
+        print(f"\nProcessing {instance}...")
+        start_time = time.time()
+
+        graph, nodes, _ = read_file(filename)
+        solution = genetic_algorithm(graph, nodes, instance_name=instance)
+        if is_valid(solution, graph):
+            print("Chromatic number:", len(set(solution)))
+            print("Normalized colors:", normalize(solution))
+        else:
+            print("No valid solution found.")
+        
+        total_time = time.time() - start_time
+        print(f"Time taken: {total_time:.2f} seconds")

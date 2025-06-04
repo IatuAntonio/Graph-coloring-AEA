@@ -117,18 +117,18 @@ def smart_mutation(solution):
     return solution
 
 
-def smarter_mutation(solution, nodes, graph):
-    new_solution = solution[:]
+# def smarter_mutation(solution, nodes, graph):
+#     new_solution = solution[:]
 
-    for node in graph:
-        conflict = any(new_solution[node] == new_solution[neighbor] for neighbor in graph[node])
-        if conflict:
-            neighbor_colors = set(new_solution[neighbor] for neighbor in graph[node])
-            available_colors = list(set(range(nodes)) - neighbor_colors)
-            if available_colors:
-                new_solution[node] = random.choice(available_colors)
+#     for node in graph:
+#         conflict = any(new_solution[node] == new_solution[neighbor] for neighbor in graph[node])
+#         if conflict:
+#             neighbor_colors = set(new_solution[neighbor] for neighbor in graph[node])
+#             available_colors = list(set(range(nodes)) - neighbor_colors)
+#             if available_colors:
+#                 new_solution[node] = random.choice(available_colors)
 
-    return new_solution
+#     return new_solution
 
 
 def is_valid(solution, graph):

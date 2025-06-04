@@ -1,0 +1,60 @@
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 4, 5, 7, 2, 8, 3, 7, 6, 8, 3, 1, 2, 8, 3, 1, 6, 4, 7, 6, 4, 5, 8, 2, 1, 2, 8, 6, 1, 3, 4]
+Total time for 10 runs: 175.71 seconds
+Average time per run: 17.57 seconds
+
+
+
+
+Best chromatic number: 26
+Best normalized colors: [1, 2, 3, 4, 5, 6, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 7, 22, 20, 14, 23, 1, 24, 21, 25, 1, 4, 10, 11, 26]
+Total time for 10 runs: 100.97 seconds
+Average time per run: 10.10 seconds
+Best chromatic number: 10
+Best normalized colors: [1, 2, 3, 4, 5, 6, 7, 5, 1, 2, 8, 4, 9, 10, 7, 5, 1, 3, 2, 8, 4, 3, 6, 7, 3, 9, 10, 1, 2, 8, 10, 7, 8, 6, 3, 9]
+Total time for 10 runs: 102.03 seconds
+Average time per run: 10.20 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 4, 7, 6, 1, 2, 3, 2, 5, 4, 3, 8, 7, 3, 8, 7, 5, 1, 4, 7, 4, 1, 2, 6, 8, 5, 6, 8, 7, 3, 2]
+Total time for 10 runs: 105.01 seconds
+Average time per run: 10.50 seconds
+Best chromatic number: 9
+Best normalized colors: [1, 2, 3, 4, 5, 6, 3, 4, 7, 6, 8, 2, 2, 5, 8, 9, 1, 7, 6, 1, 2, 5, 3, 4, 4, 3, 6, 8, 2, 5, 5, 8, 1, 3, 4, 9]
+Total time for 10 runs: 111.78 seconds
+Average time per run: 11.18 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 5, 7, 8, 2, 3, 1, 2, 3, 4, 5, 6, 8, 7, 6, 2, 8, 1, 5, 3, 1, 7, 6, 2, 4, 8, 4, 5, 1, 7, 3]
+Total time for 10 runs: 175.42 seconds
+Average time per run: 17.54 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 6, 4, 7, 1, 3, 8, 7, 3, 8, 5, 2, 1, 5, 6, 2, 3, 4, 7, 2, 1, 4, 7, 6, 3, 4, 5, 6, 8, 1, 2]
+Total time for 10 runs: 199.79 seconds
+Average time per run: 19.98 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 7, 6, 5, 8, 1, 3, 4, 8, 2, 3, 6, 5, 3, 1, 4, 5, 8, 2, 6, 7, 8, 2, 4, 1, 5, 4, 1, 6, 3, 8]
+Total time for 10 runs: 210.23 seconds
+Average time per run: 21.02 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 7, 8, 5, 6, 1, 3, 5, 3, 4, 7, 8, 2, 6, 7, 2, 5, 3, 1, 3, 5, 6, 8, 2, 4, 8, 4, 1, 3, 6, 7]
+Total time for 10 runs: 234.55 seconds
+Average time per run: 23.46 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 4, 7, 5, 1, 2, 3, 6, 3, 2, 7, 4, 8, 7, 4, 1, 6, 3, 2, 3, 5, 7, 2, 8, 4, 8, 1, 4, 3, 7, 5]
+Total time for 10 runs: 224.35 seconds
+Average time per run: 22.43 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 4, 5, 6, 7, 8, 3, 8, 3, 4, 1, 2, 7, 2, 6, 7, 8, 3, 1, 3, 4, 1, 2, 7, 8, 5, 7, 8, 3, 1, 2]
+Total time for 10 runs: 217.66 seconds
+Average time per run: 21.77 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 5, 4, 7, 6, 1, 2, 8, 6, 2, 5, 4, 3, 2, 7, 4, 8, 6, 5, 4, 8, 6, 7, 3, 1, 3, 1, 5, 2, 8, 7]
+Total time for 10 runs: 127.76 seconds
+Average time per run: 12.78 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 3, 6, 7, 1, 8, 4, 8, 1, 4, 3, 7, 2, 6, 7, 2, 5, 1, 8, 2, 4, 1, 7, 3, 5, 5, 3, 8, 2, 4, 7]
+Total time for 10 runs: 144.21 seconds
+Average time per run: 14.42 seconds
+Best chromatic number: 8
+Best normalized colors: [1, 2, 3, 4, 5, 6, 6, 7, 5, 8, 2, 4, 5, 8, 4, 7, 1, 3, 7, 6, 1, 3, 8, 5, 2, 4, 7, 5, 6, 1, 3, 5, 6, 1, 7, 2]
+Total time for 10 runs: 169.40 seconds
+Average time per run: 16.94 seconds
