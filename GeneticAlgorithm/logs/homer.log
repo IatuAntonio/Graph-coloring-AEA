@@ -1,0 +1,42 @@
+Logs for instance homer
+
+--- Run 1 ---
+Chromatic number: 13
+Time taken: 85.29 seconds
+
+--- Run 2 ---
+Chromatic number: 14
+Time taken: 71.64 seconds
+
+--- Run 3 ---
+Chromatic number: 13
+Time taken: 94.44 seconds
+
+--- Run 4 ---
+Chromatic number: 15
+Time taken: 98.01 seconds
+
+--- Run 5 ---
+Chromatic number: 14
+Time taken: 65.26 seconds
+
+--- Run 6 ---
+Chromatic number: 13
+Time taken: 95.42 seconds
+
+--- Run 7 ---
+Chromatic number: 15
+Time taken: 62.93 seconds
+
+--- Run 8 ---
+Chromatic number: 15
+Time taken: 96.41 seconds
+
+--- Run 9 ---
+Chromatic number: 14
+Time taken: 92.33 seconds
+
+--- Run 10 ---
+Chromatic number: 15
+Time taken: 96.85 seconds
+

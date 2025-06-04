@@ -9,6 +9,8 @@ import torch
 from sklearn.manifold import TSNE
 from pyvis.network import Network
 import matplotlib.patches as mpatches
+import numpy as np
+from scipy import stats
 
 
 def read_file(filename):
@@ -257,17 +259,106 @@ def genetic_algorithm(graph, nodes, instance_name, population_size=100, generati
         best = min(population, key=lambda x: fitness(x, graph))
 
     normalized = normalize(best)
-    
-    save_ram_plot(ram_usage, instance_name, output_dir)
-    save_time_plot(gen_times, instance_name, output_dir)
-    save_static_graph_plot(graph, normalized, instance_name, output_dir)
-    save_interactive_graph(graph, normalized, instance_name, output_dir)
 
-    return best
+    return normalized, ram_usage, gen_times
 
 
 def track_ram_usage():
     return psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024
+
+
+
+def analyze_results(chromatic_numbers, run_times, instance_name, output_dir='./output_stats'):
+    os.makedirs(output_dir, exist_ok=True)
+
+    def print_stats(data, label):
+        print(f"Statistics for {label}:")
+        print(f"  Mean: {np.mean(data):.3f}")
+        print(f"  Median: {np.median(data):.3f}")
+        try:
+            mode = stats.mode(data).mode[0]
+            print(f"  Mode: {mode}")
+        except Exception:
+            print(f"  Mode: N/A")
+        print(f"  Standard Deviation: {np.std(data):.3f}")
+        print(f"  Variance: {np.var(data):.3f}")
+        print(f"  Min: {np.min(data)}")
+        print(f"  Max: {np.max(data)}")
+        q1 = np.percentile(data, 25)
+        q3 = np.percentile(data, 75)
+        print(f"  IQR: {q3 - q1:.3f}")
+        print()
+
+    def print_stats_to_file(data, label, file_handle):
+        file_handle.write(f"Statistics for {label}:\n")
+        file_handle.write(f"  Mean: {np.mean(data):.3f}\n")
+        file_handle.write(f"  Median: {np.median(data):.3f}\n")
+        try:
+            mode = stats.mode(data, keepdims=True).mode[0]
+            file_handle.write(f"  Mode: {mode}\n")
+        except Exception:
+            file_handle.write(f"  Mode: N/A\n")
+        file_handle.write(f"  Standard Deviation: {np.std(data):.3f}\n")
+        file_handle.write(f"  Variance: {np.var(data):.3f}\n")
+        file_handle.write(f"  Min: {np.min(data)}\n")
+        file_handle.write(f"  Max: {np.max(data)}\n")
+        q1 = np.percentile(data, 25)
+        q3 = np.percentile(data, 75)
+        file_handle.write(f"  IQR: {q3 - q1:.3f}\n\n")
+
+    print_stats(chromatic_numbers, "Chromatic Number")
+    print_stats(run_times, "Execution Time (seconds)")
+
+    stats_path = os.path.join(output_dir, f"{instance_name}_stats.txt")
+    with open(stats_path, "a") as f:
+        print_stats_to_file(chromatic_numbers, "Chromatic Number", f)
+        print_stats_to_file(run_times, "Execution Time (seconds)", f)
+
+    plt.hist(chromatic_numbers, bins='auto', color='skyblue', edgecolor='black')
+    plt.title(f"Chromatic Number Distribution - {instance_name}")
+    plt.xlabel("Chromatic Number")
+    plt.ylabel("Frequency")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_chromatic_hist.png"))
+    plt.close()
+
+    plt.hist(run_times, bins='auto', color='lightgreen', edgecolor='black')
+    plt.title(f"Execution Time Distribution - {instance_name}")
+    plt.xlabel("Execution Time (seconds)")
+    plt.ylabel("Frequency")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_time_hist.png"))
+    plt.close()
+
+    # Chromatic Number Boxplot - Vertical
+    plt.boxplot(chromatic_numbers, vert=True)
+    plt.ylabel("Chromatic Number")
+    plt.title(f"Chromatic Number Boxplot - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_chromatic_boxplot.png"))
+    plt.close()
+
+    # Execution Time Boxplot - Vertical
+    plt.boxplot(run_times, vert=True)
+    plt.ylabel("Execution Time (seconds)")
+    plt.title(f"Execution Time Boxplot - {instance_name}")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_time_boxplot.png"))
+    plt.close()
+
+    plt.scatter(chromatic_numbers, run_times, color='purple', alpha=0.6)
+    plt.title(f"Chromatic Number vs Execution Time - {instance_name}")
+    plt.xlabel("Chromatic Number")
+    plt.ylabel("Execution Time (seconds)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f"{instance_name}_scatter.png"))
+    plt.close()
+
+
+def save_run_data(chromatic_number, run_time, chromatic_numbers, run_times):
+    chromatic_numbers.append(chromatic_number)
+    run_times.append(run_time)
+
 
 
 if __name__ == '__main__':
@@ -277,7 +368,7 @@ if __name__ == '__main__':
         # ('queen5_5', 5),
         # ('queen6_6', 7),
         # ('myciel5', 6),
-        ('queen7_7', 7),
+        # ('queen7_7', 7),
         # ('queen8_8', 9),
         # ('1-Insertions_4', 4),
         # ('huck', 11),
@@ -291,7 +382,7 @@ if __name__ == '__main__':
         # ('queen11_11', 11),
         # ('anna', 11),
         # ('2-Insertions_4', 4),
-        # ('queen13_13', 13),
+        ('queen13_13', 13),
         # ('myciel7', 8),
         # ('homer', 13),
     ]
@@ -307,6 +398,11 @@ if __name__ == '__main__':
         best_solution = None
         best_chromatic = float('inf')
         total_time_runs = 0
+        best_ram_usage = None
+        best_gen_times = None
+
+        chromatic_numbers = []
+        run_times = []
 
         log_file_path = f'logs/{instance}.log'
 
@@ -315,11 +411,13 @@ if __name__ == '__main__':
 
         for run in range(runs):
             start_time = time.time()
-            solution = genetic_algorithm(graph, nodes, instance_name=instance)
+            solution, ram_usage, gen_times = genetic_algorithm(graph, nodes, instance_name=instance)
             run_time = time.time() - start_time
 
             chromatic_number = len(set(solution))
             total_time_runs += run_time
+
+            save_run_data(chromatic_number, run_time, chromatic_numbers, run_times)
 
             if is_valid(solution, graph):
                 print(f"Run {run + 1}: Chromatic number = {chromatic_number}, Time taken = {run_time:.2f} seconds")
@@ -332,6 +430,8 @@ if __name__ == '__main__':
                 if chromatic_number < best_chromatic:
                     best_chromatic = chromatic_number
                     best_solution = solution
+                    best_ram_usage = ram_usage
+                    best_gen_times = gen_times
             else:
                 print(f"Run {run + 1}: Invalid solution found.")
                 with open(log_file_path, 'a') as log_file:
@@ -339,13 +439,15 @@ if __name__ == '__main__':
                     log_file.write('Invalid solution found. Time taken: {run_time:.2f} seconds\n\n')
                     log_file.flush()
 
-            # if is_valid(solution, graph) and chromatic_number < best_chromatic:
-            #     best_chromatic = chromatic_number
-            #     best_solution = solution
-
         result_file_path = f'results/{instance}_best.txt'
         with open(result_file_path, 'a') as result_file:
             if best_solution is not None:
+                # normalized_best = normalize(best_solution)
+                save_ram_plot(best_ram_usage, instance, output_dir='./output')
+                save_time_plot(best_gen_times, instance, output_dir='./output')
+                save_static_graph_plot(graph, best_solution, instance, output_dir='./output')
+                save_interactive_graph(graph, best_solution, instance, output_dir='./output')
+
                 result_file.write(f'Best chromatic number: {best_chromatic}\n')
                 result_file.write(f'Best normalized colors: {normalize(best_solution)}\n')
                 result_file.write(f'Total time for {runs} runs: {total_time_runs:.2f} seconds\n')
@@ -355,3 +457,4 @@ if __name__ == '__main__':
 
         print(f"Best chromatic number for {instance}: {best_chromatic}")
         print(f"Total time for {runs} runs: {total_time_runs:.2f} seconds\n\n")
+        analyze_results(chromatic_numbers, run_times, instance_name=instance, output_dir='./output_stats')

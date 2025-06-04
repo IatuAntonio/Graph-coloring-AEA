@@ -1,0 +1,41 @@
+Logs for instance queen11_11
+
+--- Run 1 ---
+Chromatic number: 18
+Time taken: 75.54 seconds
+
+--- Run 2 ---
+Chromatic number: 18
+Time taken: 73.98 seconds
+
+--- Run 3 ---
+Chromatic number: 18
+Time taken: 78.91 seconds
+
+--- Run 4 ---
+Chromatic number: 18
+Time taken: 68.60 seconds
+
+--- Run 5 ---
+Chromatic number: 18
+Time taken: 55.52 seconds
+
+--- Run 6 ---
+Chromatic number: 18
+Time taken: 63.95 seconds
+
+--- Run 7 ---
+Chromatic number: 18
+Time taken: 80.09 seconds
+
+--- Run 8 ---
+Chromatic number: 17
+Time taken: 78.87 seconds
+
+--- Run 9 ---
+Chromatic number: 18
+Time taken: 77.10 seconds
+
+--- Run 10 ---
+Invalid solution found. Time taken: {run_time:.2f} seconds
+
