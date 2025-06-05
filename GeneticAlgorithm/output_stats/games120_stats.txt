@@ -1,20 +1,20 @@
 Statistics for Chromatic Number:
-  Mean: 9.100
+  Mean: 9.433
   Median: 9.000
   Mode: 9
-  Standard Deviation: 0.300
-  Variance: 0.090
+  Standard Deviation: 0.496
+  Variance: 0.246
   Min: 9
   Max: 10
-  IQR: 0.000
+  IQR: 1.000
 
 Statistics for Execution Time (seconds):
-  Mean: 30.676
-  Median: 31.039
-  Mode: 28.028638124465942
-  Standard Deviation: 1.588
-  Variance: 2.520
-  Min: 28.028638124465942
-  Max: 32.48282170295715
-  IQR: 2.930
+  Mean: 29.589
+  Median: 30.023
+  Mode: 21.531439781188965
+  Standard Deviation: 3.240
+  Variance: 10.500
+  Min: 21.531439781188965
+  Max: 37.67225217819214
+  IQR: 2.470
 

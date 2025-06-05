@@ -2,41 +2,151 @@ Logs for instance queen5_5
 
 --- Run 1 ---
 Chromatic number: 5
-Time taken: 8.22 seconds
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.34 seconds
 
 --- Run 2 ---
-Chromatic number: 5
-Time taken: 7.88 seconds
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 4, 6, 5, 2, 1, 5, 7, 4, 3, 6, 2, 1, 6, 5, 4, 6, 5, 2, 1, 7]
+Time taken: 8.03 seconds
 
 --- Run 3 ---
 Chromatic number: 7
-Time taken: 8.33 seconds
+Solution: [1, 2, 3, 4, 5, 5, 4, 6, 1, 7, 2, 1, 7, 3, 4, 3, 6, 2, 5, 1, 4, 5, 1, 7, 3]
+Time taken: 7.29 seconds
 
 --- Run 4 ---
 Chromatic number: 5
-Time taken: 7.50 seconds
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.15 seconds
 
 --- Run 5 ---
-Chromatic number: 7
-Time taken: 8.14 seconds
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.52 seconds
 
 --- Run 6 ---
-Chromatic number: 5
-Time taken: 9.01 seconds
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 4, 5, 6, 1, 2, 7, 1, 4, 5, 6, 5, 6, 7, 2, 1, 2, 3, 5, 6, 7]
+Time taken: 9.10 seconds
 
 --- Run 7 ---
-Chromatic number: 5
-Time taken: 8.03 seconds
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 4, 6, 1, 7, 2, 2, 5, 4, 3, 1, 3, 1, 6, 2, 7, 6, 4, 5, 1, 3]
+Time taken: 8.68 seconds
 
 --- Run 8 ---
 Chromatic number: 7
-Time taken: 8.85 seconds
+Solution: [1, 2, 3, 4, 5, 4, 6, 5, 7, 3, 5, 3, 4, 1, 2, 7, 1, 2, 3, 4, 2, 4, 6, 5, 7]
+Time taken: 8.14 seconds
 
 --- Run 9 ---
-Chromatic number: 7
-Time taken: 8.11 seconds
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.64 seconds
 
 --- Run 10 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.19 seconds
+
+--- Run 11 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 7.75 seconds
+
+--- Run 12 ---
 Chromatic number: 7
-Time taken: 7.71 seconds
+Solution: [1, 2, 3, 4, 5, 5, 4, 1, 6, 2, 6, 3, 2, 7, 1, 2, 1, 6, 5, 4, 4, 5, 7, 1, 6]
+Time taken: 8.39 seconds
+
+--- Run 13 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 7.92 seconds
+
+--- Run 14 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 6, 4, 5, 7, 2, 5, 7, 2, 6, 4, 2, 1, 4, 5, 3, 4, 5, 6, 2, 7]
+Time taken: 7.75 seconds
+
+--- Run 15 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 4, 5, 6, 1, 3, 7, 3, 2, 5, 4, 2, 4, 1, 3, 7, 3, 7, 5, 2, 6]
+Time taken: 7.42 seconds
+
+--- Run 16 ---
+Chromatic number: 6
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 6, 2, 6, 1, 2, 3, 4, 2, 3, 4, 5, 6, 4, 6, 1, 2, 3]
+Time taken: 9.13 seconds
+
+--- Run 17 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.20 seconds
+
+--- Run 18 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 3, 5, 6, 1, 2, 4, 7, 2, 5, 6, 2, 3, 1, 7, 4, 6, 4, 5, 2, 3]
+Time taken: 7.67 seconds
+
+--- Run 19 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 7.67 seconds
+
+--- Run 20 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 4, 6, 5, 2, 3, 2, 1, 4, 7, 6, 6, 7, 2, 5, 1, 3, 5, 1, 6, 2]
+Time taken: 8.21 seconds
+
+--- Run 21 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.64 seconds
+
+--- Run 22 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.92 seconds
+
+--- Run 23 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 3, 4, 5, 1, 2, 5, 1, 2, 3, 4, 2, 3, 4, 5, 1, 4, 5, 1, 2, 3]
+Time taken: 8.50 seconds
+
+--- Run 24 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 6, 5, 1, 7, 3, 4, 3, 6, 5, 1, 5, 1, 4, 2, 7, 2, 7, 5, 1, 4]
+Time taken: 7.01 seconds
+
+--- Run 25 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.45 seconds
+
+--- Run 26 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.14 seconds
+
+--- Run 27 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 7.79 seconds
+
+--- Run 28 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 6, 5, 7, 1, 2, 4, 3, 2, 6, 7, 5, 6, 4, 3, 1, 7, 1, 5, 2, 6]
+Time taken: 8.34 seconds
+
+--- Run 29 ---
+Chromatic number: 7
+Solution: [1, 2, 3, 4, 5, 6, 4, 1, 2, 7, 2, 5, 7, 3, 1, 7, 1, 2, 6, 4, 3, 6, 5, 1, 2]
+Time taken: 9.42 seconds
+
+--- Run 30 ---
+Chromatic number: 5
+Solution: [1, 2, 3, 4, 5, 4, 5, 1, 2, 3, 2, 3, 4, 5, 1, 5, 1, 2, 3, 4, 3, 4, 5, 1, 2]
+Time taken: 8.07 seconds
 

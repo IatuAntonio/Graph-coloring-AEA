@@ -362,32 +362,31 @@ def save_run_data(chromatic_number, run_time, chromatic_numbers, run_times):
 
 
 if __name__ == '__main__':
-    # filename = './instances/queen5_5.col'
 
     instances = [
-        # ('queen5_5', 5),
-        # ('queen6_6', 7),
-        # ('myciel5', 6),
-        # ('queen7_7', 7),
-        # ('queen8_8', 9),
-        # ('1-Insertions_4', 4),
-        # ('huck', 11),
-        # ('jean', 10),
-        # ('queen9_9', 10),
-        # ('david', 11),
-        # ('mug88_1', 4),
-        # ('myciel6', 7),
-        # ('queen8_12', 12),
-        # ('games120', 9),
-        # ('queen11_11', 11),
-        # ('anna', 11),
-        # ('2-Insertions_4', 4),
+        ('queen5_5', 5),
+        ('queen6_6', 7),
+        ('myciel5', 6),
+        ('queen7_7', 7),
+        ('queen8_8', 9),
+        ('1-Insertions_4', 4),
+        ('huck', 11),
+        ('jean', 10),
+        ('queen9_9', 10),
+        ('david', 11),
+        ('mug88_1', 4),
+        ('myciel6', 7),
+        ('queen8_12', 12),
+        ('games120', 9),
+        ('queen11_11', 11),
+        ('anna', 11),
+        ('2-Insertions_4', 4),
         ('queen13_13', 13),
-        # ('myciel7', 8),
-        # ('homer', 13),
+        ('myciel7', 8),
+        ('homer', 13),
     ]
      
-    runs = 10
+    runs = 30
 
     for instance, _ in instances:
         filename = f'./instances/{instance}.col'
@@ -424,6 +423,7 @@ if __name__ == '__main__':
                 with open(log_file_path, 'a') as log_file:
                     log_file.write(f'--- Run {run + 1} ---\n')
                     log_file.write(f'Chromatic number: {chromatic_number}\n')
+                    log_file.write(f'Solution: {solution}\n')
                     log_file.write(f'Time taken: {run_time:.2f} seconds\n\n')
                     log_file.flush()
 
