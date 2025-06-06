@@ -87,13 +87,6 @@ def smart_crossover(parent1, parent2):
     return child
 
 
-# def smart_mutation(solution):
-#     index = random.randint(0, len(solution) - 1)
-#     available_colors = sorted(set(solution))
-#     solution[index] = random.choice(available_colors)
-#     return solution
-
-
 def smart_mutation(solution, graph):
     mutated = solution[:]
     index = random.randint(0, len(solution) - 1)
@@ -219,9 +212,8 @@ def save_interactive_graph(graph, solution_colors, instance_name, output_dir):
     net.save_graph(os.path.join(output_dir, f"{instance_name}_interactive.html"))
 
 
-def genetic_algorithm(graph, nodes, instance_name, population_size=100, generations=1000, output_dir='./output'):
+def genetic_algorithm(graph, nodes, population_size=100, generations=1000):
     population = population_initialization(population_size, nodes)
-    # best_valid = None
     valid_solutions = []
     ram_usage = []
     gen_times = []
@@ -330,7 +322,6 @@ def analyze_results(chromatic_numbers, run_times, instance_name, output_dir='./o
     plt.savefig(os.path.join(output_dir, f"{instance_name}_time_hist.png"))
     plt.close()
 
-    # Chromatic Number Boxplot - Vertical
     plt.boxplot(chromatic_numbers, vert=True)
     plt.ylabel("Chromatic Number")
     plt.title(f"Chromatic Number Boxplot - {instance_name}")
@@ -338,7 +329,6 @@ def analyze_results(chromatic_numbers, run_times, instance_name, output_dir='./o
     plt.savefig(os.path.join(output_dir, f"{instance_name}_chromatic_boxplot.png"))
     plt.close()
 
-    # Execution Time Boxplot - Vertical
     plt.boxplot(run_times, vert=True)
     plt.ylabel("Execution Time (seconds)")
     plt.title(f"Execution Time Boxplot - {instance_name}")
@@ -362,32 +352,31 @@ def save_run_data(chromatic_number, run_time, chromatic_numbers, run_times):
 
 
 if __name__ == '__main__':
-    # filename = './instances/queen5_5.col'
 
     instances = [
-        # ('queen5_5', 5),
-        # ('queen6_6', 7),
-        # ('myciel5', 6),
-        # ('queen7_7', 7),
-        # ('queen8_8', 9),
-        # ('1-Insertions_4', 4),
-        # ('huck', 11),
-        # ('jean', 10),
-        # ('queen9_9', 10),
-        # ('david', 11),
-        # ('mug88_1', 4),
-        # ('myciel6', 7),
-        # ('queen8_12', 12),
-        # ('games120', 9),
-        # ('queen11_11', 11),
-        # ('anna', 11),
-        # ('2-Insertions_4', 4),
+        ('queen5_5', 5),
+        ('queen6_6', 7),
+        ('myciel5', 6),
+        ('queen7_7', 7),
+        ('queen8_8', 9),
+        ('1-Insertions_4', 4),
+        ('huck', 11),
+        ('jean', 10),
+        ('queen9_9', 10),
+        ('david', 11),
+        ('mug88_1', 4),
+        ('myciel6', 7),
+        ('queen8_12', 12),
+        ('games120', 9),
+        ('queen11_11', 11),
+        ('anna', 11),
+        ('2-Insertions_4', 4),
         ('queen13_13', 13),
-        # ('myciel7', 8),
-        # ('homer', 13),
+        ('myciel7', 8),
+        ('homer', 13),
     ]
      
-    runs = 10
+    runs = 30
 
     for instance, _ in instances:
         filename = f'./instances/{instance}.col'
@@ -424,6 +413,7 @@ if __name__ == '__main__':
                 with open(log_file_path, 'a') as log_file:
                     log_file.write(f'--- Run {run + 1} ---\n')
                     log_file.write(f'Chromatic number: {chromatic_number}\n')
+                    log_file.write(f'Solution: {solution}\n')
                     log_file.write(f'Time taken: {run_time:.2f} seconds\n\n')
                     log_file.flush()
 

@@ -1,4 +1,0 @@
-Best chromatic number: 10
-Best normalized colors: [1, 2, 3, 4, 5, 6, 7, 8, 5, 9, 10, 3, 1, 2, 9, 1, 2, 8, 4, 5, 6, 3, 7, 4, 6, 1, 8, 10, 6, 9, 5, 7, 10, 3, 1, 7, 10, 6, 3, 9, 4, 5, 2, 8, 1, 5, 6, 10, 3]
-Total time for 10 runs: 204.93 seconds
-Average time per run: 20.49 seconds
