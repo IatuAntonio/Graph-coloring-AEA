@@ -234,4 +234,4 @@ with open(os.path.join(output_dir, 'table_1_results.txt'), 'w', encoding='utf-8'
         f.write(f"True χ: {result['True χ']}\n")
         f.write(f"Predicted χ (GNN): {result['Predicted χ (GNN)']}\n")
         f.write(f"Predicted Colors: {result['Predicted Colors']}\n")
-        f.write(f"Execution Time (s): {result['Execution Time (s)']}\n\n")
+        f.write(f"Execution Time (s): {result['Execution Time (s)']}\n\n") 
