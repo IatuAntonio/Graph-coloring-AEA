@@ -87,13 +87,6 @@ def smart_crossover(parent1, parent2):
     return child
 
 
-# def smart_mutation(solution):
-#     index = random.randint(0, len(solution) - 1)
-#     available_colors = sorted(set(solution))
-#     solution[index] = random.choice(available_colors)
-#     return solution
-
-
 def smart_mutation(solution, graph):
     mutated = solution[:]
     index = random.randint(0, len(solution) - 1)
@@ -219,9 +212,8 @@ def save_interactive_graph(graph, solution_colors, instance_name, output_dir):
     net.save_graph(os.path.join(output_dir, f"{instance_name}_interactive.html"))
 
 
-def genetic_algorithm(graph, nodes, instance_name, population_size=100, generations=1000, output_dir='./output'):
+def genetic_algorithm(graph, nodes, population_size=100, generations=1000):
     population = population_initialization(population_size, nodes)
-    # best_valid = None
     valid_solutions = []
     ram_usage = []
     gen_times = []
@@ -330,7 +322,6 @@ def analyze_results(chromatic_numbers, run_times, instance_name, output_dir='./o
     plt.savefig(os.path.join(output_dir, f"{instance_name}_time_hist.png"))
     plt.close()
 
-    # Chromatic Number Boxplot - Vertical
     plt.boxplot(chromatic_numbers, vert=True)
     plt.ylabel("Chromatic Number")
     plt.title(f"Chromatic Number Boxplot - {instance_name}")
@@ -338,7 +329,6 @@ def analyze_results(chromatic_numbers, run_times, instance_name, output_dir='./o
     plt.savefig(os.path.join(output_dir, f"{instance_name}_chromatic_boxplot.png"))
     plt.close()
 
-    # Execution Time Boxplot - Vertical
     plt.boxplot(run_times, vert=True)
     plt.ylabel("Execution Time (seconds)")
     plt.title(f"Execution Time Boxplot - {instance_name}")
