@@ -140,7 +140,7 @@ instances = [
     ("instances/homer.col", 561, 13)
 ]
 
-hidden_dim = 32
+hidden_dim = 8
 learning_rate = 0.005
 num_epochs = 5300
 output_dir = 'table1_results_32hd_4lay'
